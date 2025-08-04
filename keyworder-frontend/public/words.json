@@ -1,0 +1,9 @@
+{
+    "pairs": [
+        ["batter", "inning"],
+        ["timbre", "volume"],
+        ["sell", "persuasion"],
+        ["angle", "inclination"]
+    ],
+    "keyword": "pitch"
+}

@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Keyworder is a word-pairing game with a unifying keyword that you have to guess",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

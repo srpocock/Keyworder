@@ -1,12 +1,12 @@
-import words from './utils/words.ts';
-
-await words.initialise();
-console.log(words.wordList);
+import Game from './components/Game.tsx';
 
 function App() {
 
     return (
-        <div>A blank canvas</div>
+        <>
+            <h1>Keyworder</h1>
+            <Game />
+        </>
     )
 }
 

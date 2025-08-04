@@ -5,9 +5,9 @@ console.log(words.wordList);
 
 function App() {
 
-  return (
-    <div>A blank canvas</div>
-  )
+    return (
+        <div>A blank canvas</div>
+    )
 }
 
 export default App

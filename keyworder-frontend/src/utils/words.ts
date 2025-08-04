@@ -4,7 +4,7 @@ let _wordInfo: { pairs: [string, string][], keyword: string } = {
     keyword: ""
 };
 
-const wordList: string[] = [];
+const _wordList: string[] = [];
 
 /**
  * Load words object containing word pairs and keyword
@@ -12,18 +12,17 @@ const wordList: string[] = [];
  */
 async function _loadWords(): Promise<{ pairs: [string, string][], keyword: string }> {
 
-  try {
-    const response = await fetch('../public/words.json');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+        const response = await fetch('../public/words.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+
+    } catch (error) {
+        console.error("Could not fetch the words array:", error);
+        return { pairs: [], keyword: "" };
     }
-    return await response.json();
-
-  } catch (error) {
-    console.error("Could not fetch the words array:", error);
-    return { pairs: [], keyword: "" };
-  }
-
 }
 
 /**
@@ -52,9 +51,9 @@ async function initialise(): Promise<void> {
 
     // Process into randomly ordered list
     _wordInfo.pairs.forEach((wordPair) => {
-        wordList.push(...wordPair);
+        _wordList.push(...wordPair);
     })
-    _shuffle(wordList);
+    _shuffle(_wordList);
 
     _initialised = true;
 }
@@ -63,16 +62,38 @@ async function initialise(): Promise<void> {
  * Test if two given test words is part of a pair
  * @param testWords
  * @returns true if the two words are in a pair
+ * @throws error if initialise has not yet been awaited
  */
 function isPair( firstWord: string, secondWord: string): boolean {
+
+    if (!_initialised) {
+        throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
+    }
+
     return _wordInfo.pairs.findIndex((pair) => {
         return pair.includes(firstWord) && pair.includes(secondWord);
     }) != -1;
-} 
+}
+
+/**
+ * Get the randomly ordered word list
+ * @returns randomly ordered word list
+ * @throws error if initialise has not yet been awaited
+ */
+function getWordList () : string[] {
+
+    if (!_initialised) {
+        throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
+    }
+
+    return _wordList;
+}
 
 export default {
     initialise,
-    wordList,
+    get wordList() { 
+        return getWordList();
+    },
     isPair
 }
 

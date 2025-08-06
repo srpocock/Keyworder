@@ -61,18 +61,20 @@ async function initialise(): Promise<void> {
 /**
  * Test if two given test words is part of a pair
  * @param testWords
- * @returns true if the two words are in a pair
+ * @returns 0,1,2,3 if one of the pairs - use this to decide colour. Returns -1 if no pair
  * @throws error if initialise has not yet been awaited
  */
-function isPair( firstWord: string, secondWord: string): boolean {
+function isPair( words: string[]): number {
 
     if (!_initialised) {
         throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
     }
 
+    if (words.length != 2) return -1;
+
     return _wordInfo.pairs.findIndex((pair) => {
-        return pair.includes(firstWord) && pair.includes(secondWord);
-    }) != -1;
+        return pair.includes(words[0]) && pair.includes(words[1]);
+    });
 }
 
 /**

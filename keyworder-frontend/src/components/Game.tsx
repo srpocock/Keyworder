@@ -26,7 +26,11 @@ export default function Game() {
     };
 
     function handleSubmit (): void {
-        console.log("Submit pressed");
+        
+        if (words.isPair(checkedWords) === -1) {
+
+        }
+
     }
 
     return (

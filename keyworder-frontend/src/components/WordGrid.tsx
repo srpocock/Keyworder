@@ -14,7 +14,7 @@ function WordTile( { word, checked, onChecked } : WordTileProps) {
 
 }
 
-export default function WordGrid( { wordList, checkedWords, onChecked}: WordGridProps ) {
+export default function WordGrid( { wordList, checkedWords, onChecked }: WordGridProps ) {
 
     return (
         <section>

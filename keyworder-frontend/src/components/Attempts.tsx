@@ -1,6 +1,6 @@
 type AttemptsProps = { attemptsRemaining: number };
 
-export default function Attempts( {attemptsRemaining} : AttemptsProps) {
+export default function Attempts({ attemptsRemaining }: AttemptsProps) {
 
     attemptsRemaining = Math.max(attemptsRemaining, 0);
     return (

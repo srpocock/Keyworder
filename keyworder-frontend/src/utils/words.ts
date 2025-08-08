@@ -15,7 +15,7 @@ async function _loadWords(): Promise<{ pairs: [string, string][], keyword: strin
     try {
         const response = await fetch('../public/words.json');
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         return await response.json();
 
@@ -29,7 +29,7 @@ async function _loadWords(): Promise<{ pairs: [string, string][], keyword: strin
  * Utility function for shuffling arrays
  * @param array array to shuffle
  */
-function _shuffle<T> (array: T[]): void {
+function _shuffle<T>(array: T[]): void {
     // Fisher-Yates shuffle - mutates array in place
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -64,7 +64,7 @@ async function initialise(): Promise<void> {
  * @returns 0,1,2,3 if one of the pairs - use this to decide colour. Returns -1 if no pair
  * @throws error if initialise has not yet been awaited
  */
-function isPair( words: string[]): number {
+function isPair(words: string[]): number {
 
     if (!_initialised) {
         throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
@@ -82,7 +82,7 @@ function isPair( words: string[]): number {
  * @returns randomly ordered word list
  * @throws error if initialise has not yet been awaited
  */
-function getInitialWordStates () : Record<string, number> {
+function getInitialWordStates(): Record<string, number> {
 
     if (!_initialised) {
         throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
@@ -91,16 +91,14 @@ function getInitialWordStates () : Record<string, number> {
     const initialWordStates: Record<string, number> = _wordList.reduce((acc, key) => {
         acc[key] = -1;
         return acc;
-        }, {} as Record<string, number>);
+    }, {} as Record<string, number>);
 
     return initialWordStates;
 }
 
-
-
 export default {
     initialise,
-    get initialWordStates() { 
+    get initialWordStates() {
         return getInitialWordStates();
     },
     isPair

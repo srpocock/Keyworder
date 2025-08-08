@@ -1,8 +1,8 @@
 import { GameState, type GameStateType } from "../utils/GameState";
 
-export default function Instructions( { gameState } : { gameState: GameStateType}) {
+export default function Instructions({ gameState }: { gameState: GameStateType }) {
 
-    switch(gameState) {
+    switch (gameState) {
         case GameState.GuessingPairs:
             return (
                 <div>

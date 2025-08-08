@@ -82,19 +82,26 @@ function isPair( words: string[]): number {
  * @returns randomly ordered word list
  * @throws error if initialise has not yet been awaited
  */
-function getWordList () : string[] {
+function getInitialWordStates () : Record<string, number> {
 
     if (!_initialised) {
         throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
     }
 
-    return _wordList;
+    const initialWordStates: Record<string, number> = _wordList.reduce((acc, key) => {
+        acc[key] = -1;
+        return acc;
+        }, {} as Record<string, number>);
+
+    return initialWordStates;
 }
+
+
 
 export default {
     initialise,
-    get wordList() { 
-        return getWordList();
+    get initialWordStates() { 
+        return getInitialWordStates();
     },
     isPair
 }

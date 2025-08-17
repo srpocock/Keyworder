@@ -1,6 +1,16 @@
-export default function KeywordInput() {
+type KeywordInputProps = { visible: boolean, disabled: boolean, keyword: string, onChange: (value: string) => void };
+
+export default function KeywordInput({ visible, disabled, keyword, onChange }: KeywordInputProps) {
+
+    if (!visible) return null;
 
     return (
-        <div>Input for guessing keyword here</div>
+        <input
+            type="text" 
+            placeholder="guess keyword" 
+            className={`keyword-input ${disabled ? 'disabled' : ''}`}
+            value={keyword}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={disabled} />
     )
 }

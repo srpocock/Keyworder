@@ -1,6 +1,17 @@
-export default function History() {
+type HistoryProps = { visible: boolean, guessedKeywords: string[] };
+
+export default function History({ visible, guessedKeywords }: HistoryProps) {
+
+    if (!visible) return null;
 
     return (
-        <div>Here is a log about all the guesses and their semantic similarity to the keyword</div>
+        <section className="history">
+            <h2>Guess History</h2>
+            <ul>
+                {guessedKeywords.map((keyword, index) => (
+                    <li key={index}>{keyword}</li>
+                ))}
+            </ul>
+        </section>
     )
 }

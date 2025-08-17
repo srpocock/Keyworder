@@ -17,6 +17,8 @@ export default function Game() {
     const [attemptsRemaining, setAttemptsRemaining] = useState<number>(4);
     const [wordStates, setWordStates] = useState<Record<string, number>>(words.initialWordStates);
     const [gameState, setGameState] = useState<GameStateType>(GameState.GuessingPairs);
+    const [keywordInput, setKeywordInput] = useState<string>('');
+    const [guessedKeywords, setGuessedKeywords] = useState<string[]>([]);
 
     // Handle what happens when word tiles are selected
     function handleCheck(word: string, checked: boolean): void {
@@ -28,6 +30,11 @@ export default function Game() {
             checked ? [...prev, word] : prev.filter(w => w !== word)
         );
     };
+
+    function getCurrentKeywordInput(rawValue: string): void {
+        const cleanedKeyword = rawValue.replace(/[^a-zA-Z]/g, "");
+        setKeywordInput(() => cleanedKeyword.toLowerCase());
+    }
 
     // Handle what happens when submit button is pressed
     function handleSubmit(): void {
@@ -51,6 +58,21 @@ export default function Game() {
             }
         } else if (gameState === GameState.GuessingKeyword) {
             // Keyword submit code
+            if (guessedKeywords.includes(keywordInput)) {
+                // If the keyword has already been guessed, do nothing
+                return;
+            }
+
+            const isCorrect = words.isKeyword(keywordInput);
+            setGuessedKeywords(prev => [...prev, keywordInput]);
+
+            if (isCorrect) {
+                // If the guess is correct, update the game state
+                setGameState(GameState.Won);
+            } else {
+                // If the guess is incorrect, update the attempts remaining
+                setAttemptsRemaining(prev => prev - 1);
+            }
         }
 
     }
@@ -73,9 +95,13 @@ export default function Game() {
             <Instructions gameState={gameState} />
             <WordGrid gameState={gameState} wordStates={wordStates} selectedWords={selectedWords} onChecked={handleCheck} />
             <Attempts attemptsRemaining={attemptsRemaining} />
-            <KeywordInput />
-            <Buttons numSelectedWords={selectedWords.length} onSubmit={handleSubmit} />
-            <History />
+            <KeywordInput 
+                visible={gameState === GameState.GuessingKeyword} 
+                disabled={attemptsRemaining <= 0 || gameState !== GameState.GuessingKeyword}
+                keyword={keywordInput}
+                onChange={getCurrentKeywordInput} />
+            <Buttons disabled={(selectedWords.length !== 2 && gameState === GameState.GuessingPairs) || gameState === GameState.Won || gameState === GameState.Lost} onSubmit={handleSubmit} />
+            <History visible={gameState !== GameState.GuessingPairs} guessedKeywords={guessedKeywords} />
         </article>
     )
 }

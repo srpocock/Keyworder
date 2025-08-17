@@ -77,6 +77,15 @@ function isPair(words: string[]): number {
     });
 }
 
+function isKeyword(word: string): boolean {
+
+    if (!_initialised) {
+        throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
+    }
+
+    return word === _wordInfo.keyword;
+}
+
 /**
  * Get the randomly ordered word list
  * @returns randomly ordered word list
@@ -101,6 +110,7 @@ export default {
     get initialWordStates() {
         return getInitialWordStates();
     },
-    isPair
+    isPair,
+    isKeyword
 }
 

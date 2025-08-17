@@ -105,12 +105,69 @@ function getInitialWordStates(): Record<string, number> {
     return initialWordStates;
 }
 
+const NODE_API: string = "https://api.conceptnet.io/c/en/";
+const RELATEDNESS_API: string = "https://api.conceptnet.io/relatedness?";
+
+async function _checkIsWord(word: string): Promise<boolean> {
+
+    if (!_initialised) {
+        throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
+    }
+
+    const urlNode = `${NODE_API}${word}`;
+    const responseNode = await fetch(urlNode);
+    const dataNode = await responseNode.json();
+
+    if (dataNode !== undefined && dataNode.error !== undefined) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * Fetch the relatedness score between two words using the ConceptNet Numberbatch API.
+ * @param word1 First word to compare
+ * @param word2 Second word to compare
+ * @returns Promise<number> - The relatedness score between the two words
+ * @throws Error if the relatedness data is not found 
+ */
+async function _fetchRelatedness(word1: string, word2: string): Promise<number> {
+
+    const urlRelatedness = `${RELATEDNESS_API}node1=/c/en/${word1}&node2=/c/en/${word2}`;
+    const responseRelatedness = await fetch(urlRelatedness);
+    const dataRelatedness = await responseRelatedness.json();
+
+    if (dataRelatedness !== undefined && dataRelatedness.value !== undefined) {
+        return dataRelatedness.value;
+    } else {
+        return -1;
+    }
+
+}
+
+async function getRelatednessScore(word: string): Promise<number> {
+
+    if (!_initialised) {
+        throw new Error(`Words module not yet initialised - you must await words.initialise() first!`);
+    }
+
+    // First check if the word is a node
+    if (!(await _checkIsWord(word))) {
+        return -1;
+    } else {
+        return _fetchRelatedness(word, _wordInfo.keyword);
+    }
+
+}
+
 export default {
     initialise,
     get initialWordStates() {
         return getInitialWordStates();
     },
     isPair,
-    isKeyword
+    isKeyword,
+    getRelatednessScore
 }
 

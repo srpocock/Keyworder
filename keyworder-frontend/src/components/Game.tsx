@@ -19,6 +19,7 @@ export default function Game() {
     const [gameState, setGameState] = useState<GameStateType>(GameState.GuessingPairs);
     const [keywordInput, setKeywordInput] = useState<string>('');
     const [guessedKeywords, setGuessedKeywords] = useState<string[]>([]);
+    const [guessRelatedness, setGuessRelatedness] = useState<(number | Promise<number>)[]>([]);
 
     // Handle what happens when word tiles are selected
     function handleCheck(word: string, checked: boolean): void {
@@ -69,9 +70,15 @@ export default function Game() {
             if (isCorrect) {
                 // If the guess is correct, update the game state
                 setGameState(GameState.Won);
+                setGuessRelatedness(prev => [...prev, 1.0]);
             } else {
                 // If the guess is incorrect, update the attempts remaining
                 setAttemptsRemaining(prev => prev - 1);
+
+                words.getRelatednessScore(keywordInput)
+                .then(score => {
+                    setGuessRelatedness(prev => [...prev, score]);
+                });
             }
         }
 
@@ -101,7 +108,7 @@ export default function Game() {
                 keyword={keywordInput}
                 onChange={getCurrentKeywordInput} />
             <Buttons disabled={(selectedWords.length !== 2 && gameState === GameState.GuessingPairs) || gameState === GameState.Won || gameState === GameState.Lost} onSubmit={handleSubmit} />
-            <History visible={gameState !== GameState.GuessingPairs} guessedKeywords={guessedKeywords} />
+            <History visible={gameState !== GameState.GuessingPairs} guessedKeywords={guessedKeywords} guessRelatedness={guessRelatedness} />
         </article>
     )
 }
